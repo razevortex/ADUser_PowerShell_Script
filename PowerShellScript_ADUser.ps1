@@ -1,18 +1,19 @@
 Import-Module ActiveDirectory
 #Import the CSV File with the Userdata change Path as needed
-$ADUsers = Import-Csv "c:\Aduser-csv.csv" -Delimiter ";"
+$Servername = "server"
+$ADUsers = Import-Csv "PATH-OF-CSV-FILE" -Delimiter ";"
 foreach ($User in $ADUsers)
 {
 $Username  	= $User.Username
-$Displayname= $User.Displayname
+$Displayname	= $User.Displayname
 $Password  	= $User.Password
-$Firstname  = $User.Firstname
+$Firstname  	= $User.Firstname
 $Lastname  	= $User.Lastname
 $Initials	= $User.Initials
-$Email      = $User.Email
+$Email      	= $User.Email
 $Title   	= $User.Title
-$Company    = $User.Company
-$Department = $User.Department
+$Company    	= $User.Company
+$Department 	= $User.Department
 $HomeDir	= $User.Dir
 $HomeDrive	= $User.Drive
 
@@ -27,19 +28,19 @@ else
     #User does not exist then proceed to create the new user account
     New-ADUser `
         -SamAccountName $Username `
-        -UserPrincipalName "$Username@ebt.local" `
+        -UserPrincipalName "$Username@$Servername" `
         -Name $Displayname `
         -GivenName $Firstname `
         -Surname $Lastname `
-		-Initials $Initials `
+	-Initials $Initials `
         -Enabled $True `
         -DisplayName $Displayname `
         -Company $Company `
         -EmailAddress $Email `
         -Title $Title `
         -Department $Department `
-		-HomeDirectory $HomeDir `
-		-HomeDrive $HomeDrive `
+	-HomeDirectory $HomeDir `
+	-HomeDrive $HomeDrive `
         -AccountPassword (convertto-securestring $Password -AsPlainText -Force) -ChangePasswordAtLogon $True
 	#Check if User was created
 	Write-Host ("Useraccount for $Username created")	
